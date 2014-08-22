@@ -1,5 +1,4 @@
 require 'twitter'
-require 'pry'
 
 class TweetTicker
   def client
