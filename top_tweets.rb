@@ -44,10 +44,10 @@ class TweetTicker
   end
 
   def display_tweets(tweets)
+    system("clear")
     tweets.each do |tweet|
       puts "#{tweet.text} - Retweeted #{tweet.retweet_count} times"
     end
-    print "\n\n\n\n\n\n"
   end
 end
 
