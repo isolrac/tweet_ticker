@@ -22,8 +22,9 @@ class TweetTicker
         if top_tweets.length < 10
           top_tweets << new_tweet
         else
+          #sort top tweets
           top_tweets = top_tweets.sort_by{|tweet| tweet.retweet_count}.reverse
-          #find original tweet if this is a retweet, so we can get its proper retweet count
+          #find original tweet if this is a retweet, to get source retweet count
           if new_tweet.retweet?
             new_tweet = new_tweet.retweeted_status
           end
@@ -31,6 +32,8 @@ class TweetTicker
           first_lesser_tweet = top_tweets.find do |existing_tweet|
             existing_tweet.retweet_count < new_tweet.retweet_count
           end
+
+          #insert popular tweet, trim the bottom-most tweet
           if first_lesser_tweet
             top_tweets.insert(top_tweets.index(first_lesser_tweet), new_tweet)
             top_tweets = top_tweets[0...10]
@@ -47,8 +50,8 @@ class TweetTicker
 
   def display_tweets(tweets)
     system("clear")
-    tweets.each do |tweet|
-      puts "#{tweet.text} - Retweeted #{tweet.retweet_count} times"
+    tweets.each_with_index do |tweet, index|
+      puts "#{index + 1}. #{tweet.text} - #{tweet.retweet_count} ReTweets"
     end
   end
 end
