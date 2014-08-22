@@ -1,4 +1,5 @@
 require 'twitter'
+require 'pry'
 
 class TweetTicker
   def client
@@ -21,8 +22,13 @@ class TweetTicker
         if top_tweets.length < 10
           top_tweets << new_tweet
         else
+          top_tweets = top_tweets.sort_by{|tweet| tweet.retweet_count}.reverse
+          #find original tweet if this is a retweet, so we can get its proper retweet count
+          if new_tweet.retweet?
+            new_tweet = new_tweet.retweeted_status
+          end
           retweet_count = new_tweet.retweet_count
-          first_lesser_tweet = sorted_tweets(top_tweets).find do |existing_tweet|
+          first_lesser_tweet = top_tweets.find do |existing_tweet|
             existing_tweet.retweet_count < new_tweet.retweet_count
           end
           if first_lesser_tweet
@@ -37,10 +43,6 @@ class TweetTicker
         sleep 2
       end
     end
-  end
-
-  def sorted_tweets(tweets)
-    tweets.sort_by{|tweet| tweet.retweet_count}.reverse
   end
 
   def display_tweets(tweets)
