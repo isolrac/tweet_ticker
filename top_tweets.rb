@@ -23,7 +23,7 @@ class TweetTicker
           top_tweets << new_tweet
         else
           #sort top tweets
-          top_tweets = top_tweets.sort_by{|tweet| tweet.retweet_count}.reverse
+          top_tweets = sort_tweets(top_tweets)
           #find original tweet if this is a retweet, to get source retweet count
           if new_tweet.retweet?
             new_tweet = new_tweet.retweeted_status
@@ -46,6 +46,10 @@ class TweetTicker
         sleep 2
       end
     end
+  end
+
+  def sort_tweets(tweets)
+    tweets.sort_by{|tweet| [tweet.retweet_count, -1 * tweets.index(tweet)]}.reverse
   end
 
   def display_tweets(tweets)
